@@ -22,7 +22,7 @@ def test_health_endpoint(client):
 
 def test_echo_endpoint(client):
     """Test the /echo endpoint"""
-    test_data = {"message": "Hello World", "value": 123}
+    test_data = {"message": "Hello, World.", "value": 123}
     response = client.post('/echo',
                           data=json.dumps(test_data),
                           content_type='application/json')
