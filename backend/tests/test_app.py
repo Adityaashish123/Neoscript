@@ -1,6 +1,11 @@
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app import app
+
 import pytest
 import json
-from app import app
+# from app import app
 
 @pytest.fixture
 def client():
