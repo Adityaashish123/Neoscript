@@ -1,0 +1,190 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'EC2 instance with monitoring for Flask API'
+
+Parameters:
+  KeyName:
+    Description: EC2 KeyPair name
+    Type: AWS::EC2::KeyPair::KeyName
+  
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+  
+  SSHLocation:
+    Description: IP range for SSH access
+    Type: String
+    Default: 0.0.0.0/0
+  
+  EmailAddress:
+    Description: Email for CloudWatch alarms
+    Type: String
+
+Resources:
+  # SNS Topic for Alarms
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${AWS::StackName}-alarms
+      Subscription:
+        - Endpoint: !Ref EmailAddress
+          Protocol: email
+
+  # Security Group
+  APISecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${AWS::StackName}-sg
+      GroupDescription: Security group for Flask API
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-sg
+
+  # IAM Role for EC2
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-role
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2Role
+
+  # EC2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      SecurityGroups:
+        - !Ref APISecurityGroup
+      KeyName: !Ref KeyName
+      ImageId: !Sub '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y python3 python3-pip git
+          
+          # Install CloudWatch agent
+          wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+          rpm -U ./amazon-cloudwatch-agent.rpm
+          
+          # Create CloudWatch config
+          cat > /opt/aws/amazon-cloudwatch-agent/etc/config.json << 'EOF'
+          {
+            "logs": {
+              "logs_collected": {
+                "files": {
+                  "collect_list": [
+                    {
+                      "file_path": "/var/log/flask-app.log",
+                      "log_group_name": "/aws/ec2/flask-api",
+                      "log_stream_name": "{instance_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            "metrics": {
+              "namespace": "FlaskAPI",
+              "metrics_collected": {
+                "cpu": {
+                  "measurement": [
+                    {"name": "cpu_usage_idle", "unit": "Percent"}
+                  ],
+                  "metrics_collection_interval": 60
+                }
+              }
+            }
+          }
+          EOF
+          
+          # Start CloudWatch agent
+          /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+            -a fetch-config \
+            -m ec2 \
+            -s \
+            -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+          
+          # Setup application directory
+          mkdir -p /home/ec2-user/app
+          cd /home/ec2-user/app
+          
+          echo "Application will be deployed via CI/CD pipeline"
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-instance
+
+  # CloudWatch Log Group
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/ec2/flask-api
+      RetentionInDays: 7
+
+  # CPU Alarm
+  HighCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${AWS::StackName}-high-cpu
+      AlarmDescription: Alert when CPU exceeds 70%
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 70
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+      AlarmActions:
+        - !Ref AlarmTopic
+
+Outputs:
+  InstanceId:
+    Description: EC2 Instance ID
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub ${AWS::StackName}-InstanceId
+  
+  PublicIP:
+    Description: Public IP address
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: !Sub ${AWS::StackName}-PublicIP
+  
+  APIEndpoint:
+    Description: API Endpoint
+    Value: !Sub 'http://${EC2Instance.PublicIp}:5000'
+  
+  LogGroupName:
+    Description: CloudWatch Log Group
+    Value: !Ref LogGroup
