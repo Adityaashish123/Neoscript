@@ -54,7 +54,7 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        
+         ssh -i private_key.pem -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "mkdir -p /home/ec2-user/app && chown ${EC2_USER}:${EC2_USER} /home/ec2-user/app"
         # Copy files to EC2
         scp -i private_key.pem -o StrictHostKeyChecking=no -r backend/* ${EC2_USER}@${EC2_HOST}:/home/ec2-user/app/
         
