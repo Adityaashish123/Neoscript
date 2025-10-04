@@ -366,7 +366,7 @@ When CPU exceeds 70%, you'll receive an email notification with:
 ## 📸 Screenshots
 
 ### 1. SNS Email Notification
-![SNS Notification](screenshots/sns-email.png)
+![SNS Notification](alarm-notification.png)
 *CloudWatch alarm triggered - CPU exceeded 70% threshold*
 
 ### 2. CloudWatch Alarms Dashboard
@@ -488,4 +488,5 @@ rm flask-api-key.pem
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
 
