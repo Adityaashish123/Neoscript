@@ -378,11 +378,11 @@ When CPU exceeds 70%, you'll receive an email notification with:
 *Recent alarms and EC2 service metrics*
 
 ### 4. EC2 Instance Running
-![EC2 Instance](screenshots/ec2-instance.png)
+![EC2 Instance](ec2instance.png)
 *EC2 instance deployed via CloudFormation*
 
 ### 5. GitHub Actions Pipeline
-![GitHub Actions](screenshots/github-actions.png)
+![GitHub Actions](github-actions.png)
 *Successful CI/CD pipeline execution*
 
 ---
@@ -488,6 +488,7 @@ rm flask-api-key.pem
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
 
 
 
