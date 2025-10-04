@@ -370,11 +370,11 @@ When CPU exceeds 70%, you'll receive an email notification with:
 *CloudWatch alarm triggered - CPU exceeded 70% threshold*
 
 ### 2. CloudWatch Alarms Dashboard
-![CloudWatch Alarms](Screenshot 2025-10-04 020251.png)
+![CloudWatch Alarms](alarm.png)
 *Alarm configuration showing current state: OK*
 
 ### 3. CloudWatch Overview
-![CloudWatch Overview](screenshots/cloudwatch-overview.png)
+![CloudWatch Overview](cloudwatchDashboard.png)
 *Recent alarms and EC2 service metrics*
 
 ### 4. EC2 Instance Running
@@ -488,5 +488,6 @@ rm flask-api-key.pem
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
 
 
