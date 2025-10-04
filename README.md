@@ -131,7 +131,7 @@ aws-devops-project/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Adityaashish123/Neoscript
+git clone https://github.com/YOUR_USERNAME/aws-devops-project.git
 cd aws-devops-project
 ```
 
@@ -474,8 +474,8 @@ rm flask-api-key.pem
 ## 👨‍💻 Author
 
 **Your Name**  
-- GitHub: [Adityaashish123](https://github.com/Adityaashish123)
-- Email: adityaashish441@gmail.com
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
 
 ---
 
@@ -483,6 +483,9 @@ rm flask-api-key.pem
 
 - AWS for comprehensive cloud services
 - Flask community for the excellent web framework
-- GitHub Actions for seamless CI/CD integration
+- GitHub Actions for seamless CI/CD integration.
 
 ---
+
+**Made with ❤️ for AWS DevOps Learning**
+
