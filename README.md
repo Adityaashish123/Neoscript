@@ -474,8 +474,8 @@ rm flask-api-key.pem
 ## 👨‍💻 Author
 
 **Your Name**  
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [Adityaashish123](https://github.com/Adityaashish123)
+- Email: adityaashish441@gmail.com
 
 ---
 
@@ -488,6 +488,7 @@ rm flask-api-key.pem
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
 
 
 
