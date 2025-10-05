@@ -206,7 +206,7 @@ aws cloudformation create-stack \
   --template-body file://infrastructure/cloudformation/ec2-stack.yaml \
   --parameters \
     ParameterKey=KeyName,ParameterValue=flask-api-key \
-    ParameterKey=InstanceType,ParameterValue=t2.micro  \
+    ParameterKey=InstanceType,ParameterValue=t3.micro  \
     ParameterKey=SSHLocation,ParameterValue=YOUR_IP/32 \
     ParameterKey=EmailAddress,ParameterValue=your-email@example.com \
   --capabilities CAPABILITY_IAM \
@@ -488,6 +488,7 @@ rm flask-api-key.pem
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
 
 
 
