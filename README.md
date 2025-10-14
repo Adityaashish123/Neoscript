@@ -206,7 +206,7 @@ aws cloudformation create-stack \
   --template-body file://infrastructure/cloudformation/ec2-stack.yaml \
   --parameters \
     ParameterKey=KeyName,ParameterValue=flask-api-key \
-    ParameterKey=InstanceType,ParameterValue=t2.micro  \
+    ParameterKey=InstanceType,ParameterValue=t3.micro  \
     ParameterKey=SSHLocation,ParameterValue=YOUR_IP/32 \
     ParameterKey=EmailAddress,ParameterValue=your-email@example.com \
   --capabilities CAPABILITY_IAM \
@@ -366,23 +366,23 @@ When CPU exceeds 70%, you'll receive an email notification with:
 ## 📸 Screenshots
 
 ### 1. SNS Email Notification
-![SNS Notification](screenshots/sns-email.png)
+![SNS Notification](alarm-notification.png)
 *CloudWatch alarm triggered - CPU exceeded 70% threshold*
 
 ### 2. CloudWatch Alarms Dashboard
-![CloudWatch Alarms](screenshots/cloudwatch-alarms.png)
+![CloudWatch Alarms](alarm.png)
 *Alarm configuration showing current state: OK*
 
 ### 3. CloudWatch Overview
-![CloudWatch Overview](screenshots/cloudwatch-overview.png)
+![CloudWatch Overview](cloudwatchDashboard.png)
 *Recent alarms and EC2 service metrics*
 
 ### 4. EC2 Instance Running
-![EC2 Instance](screenshots/ec2-instance.png)
+![EC2 Instance](ec2instance.png)
 *EC2 instance deployed via CloudFormation*
 
 ### 5. GitHub Actions Pipeline
-![GitHub Actions](screenshots/github-actions.png)
+![GitHub Actions](github-actions.png)
 *Successful CI/CD pipeline execution*
 
 ---
@@ -474,8 +474,8 @@ rm flask-api-key.pem
 ## 👨‍💻 Author
 
 **Your Name**  
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [Adityaashish123](https://github.com/Adityaashish123)
+- Email: adityaashish441@gmail.com
 
 ---
 
@@ -483,9 +483,14 @@ rm flask-api-key.pem
 
 - AWS for comprehensive cloud services
 - Flask community for the excellent web framework
-- GitHub Actions for seamless CI/CD integration.
+- GitHub Actions for seamless CI/CD integration
 
 ---
 
 **Made with ❤️ for AWS DevOps Learning**
+
+
+
+
+
 
