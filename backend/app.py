@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 @app.route('/health', methods=['GET'])
 def health():
-    logger.info("Health check endpoint called.")
+    logger.info("Health check endpoint called!!!")
     return jsonify({"status": "ok"}), 200
 
 @app.route('/echo', methods=['POST'])
